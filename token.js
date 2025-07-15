@@ -9,7 +9,7 @@ module.exports = (req, res) => {
     fs.appendFileSync(
         "debug_log.txt",`${new Date().toISOString()} -GET Request: ${JSON.stringify(req.query)}\n`
     );
-    if(huberifyToken === verifyToken){
+    if(hubVerfytoken === veryfyToken){
         res.status(200).send(hubChallenge);
     } else{
         fs.appendFileSync(
