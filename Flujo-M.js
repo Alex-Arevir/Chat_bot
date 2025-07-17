@@ -5,7 +5,7 @@ const fs = require ("fs");
 const{
     hello,
     
-}= require("/plantillas");
+}= require("./Plantiillas");
 
 
 module.exports = async(req,res) => {
@@ -28,9 +28,20 @@ const buttonReply = message.interactive?.button_reply?.id.toLowerCase() || "";
 
 //diccionario de saludos
 
-const Caja_Saludos = [
+const Clave_Saludos = [
 "hola","buenas","buen día","buenas tardes", "buenas noches", "qué tal", "hola bot", "hey","holi","saludos","que onda","qué hay"
 
+];
+const ClaveCita=[
+    "agendar cita","reservar cita","hacer cita","Agendar Cita","Agendarcita","agendarCita","Agendar","agendar"
+];
+
+const ClaveCancelar=["cancelar","Cancelar","cancelar cita","Cancelar cita","Cancelar Cita","cancelarcita","Cancelarcita","Canselar sita"
+
+];
+
+const ClaveConsultar=[
+    "consultar cita","consultar Citas","ver citas","versitas","Consultar","consultar"
 ];
 
 
@@ -39,26 +50,44 @@ let action ="";
 let extractedValue="";
 
 
-
-if(Caja_Saludos.some((saludo)=>text.include(saludo))){
+if(Clave_Saludos.some((saludo)=>text.includes(saludo))){
 action= "saludo";
+} else if  (ClaveCita.some((cita)=>text.includes(cita)) || buttonReply ==="btn_agendar_cita"){
+    action="agendar_cita";  
+}else if (ClaveCancelar.some(cancelar=> text.includes(cancelar)) || buttonReply ==="btn_cancelarcita"){
+    action="cancelar_cita";
+}else if (ClaveConsultar.some(consulta=> text.includes(consulta))|| buttonReply ==="btn_consultar_cita"){
+    action= "consultar_cita";
 }
 
 switch(action){
     case "saludo":
-        await plantilla_saludo(from,"hello_world");
-        break;        
+        await enviarplantillaWapp(from,"hello");
+        break;
 
-        case "":
+    case "agendar_cita":
+        await iniciarAgenda(from,"agendar_cita_name" );
+        break;
+    case"cancelar_cita":
+    await IniciarCancelacion(from,"" );
+        break; 
+
+    case "consultar_cita":
+        await Consultacita(from);
+        break;
     default:
+        await plantillaNoentiendo(from,"no_entiendo");
         console.log("No hay plantilla que coincida");
 }
 res.status(200).send("Mensaje Procesado");
 
 
+if('agendar_cita_name'.some((n)=>text.includes(n))){ 
+            
+}
 //ejemplo de Botton
 /*
-}else if{text.include("menu") || buttonReply === "btn_menu" ||buttonReply=== "btn_promos"
+}else if{text.includes("menu") || buttonReply === "btn_menu" ||buttonReply=== "btn_promos"
 action="menu";
 }
 */
