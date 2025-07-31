@@ -4,6 +4,16 @@ const fs = require("fs");
 //aqui van las plantillas, las quue se tengan}
 const plants = require("./bodyColex");
 const { Mresp } = require("./Mresp");
+const Diccionario = require("./Diccionario");
+
+
+/** 
+ *
+ * @param {string} from - Número de teléfono del usuario.
+ * @param {string} text - Texto del mensaje recibido.
+ * @param {string} buttonReply - Botón presionado.
+ * @returns {Promise<void>}
+ */
 
 module.exports = async (req, res) => {
   //logs de solicitud entrante

@@ -11,6 +11,6 @@ agendar:[
 cancelar:["cancelar","Cancelar","cancelar cita","Cancelar cita","Cancelar Cita","cancelarcita","Cancelarcita","Canselar sita"
 ],
 consultar:[
-"consultar cita","consultar Citas","ver citas","versitas","Consultar","consultar"
+"aclaraciones","dudas","aclaraciones","consultar cita","consultar Citas","ver citas","versitas","Consultar","consultar"
 ]
 };

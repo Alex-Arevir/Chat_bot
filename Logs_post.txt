@@ -7,3 +7,9 @@
 2025-07-30T18:42:19.255Z - POST request: {"entry":[{"change":[{"value":{"message":[{"from":"526181670762","text":{"body":"hola"}}]}}]}]}
 2025-07-30T18:53:41.840Z - POST request: {"entry":[{"change":[{"value":{"message":[{"from":"526181670762","text":{"body":"cancelar"}}]}}]}]}
 2025-07-30T18:54:34.902Z - POST request: {"entry":[{"change":[{"value":{"message":[{"from":"526181670762","text":{"body":"cancelar"}}]}}]}]}
+2025-07-31T16:51:45.712Z - POST request: {"entry":[{"change":[{"value":{"message":[{"from":"526181670762","text":{"body":"cancelar"}}]}}]}]}
+2025-07-31T16:52:07.693Z - POST request: {"entry":[{"change":[{"value":{"message":[{"from":"526181670762","text":{"body":"hola"}}]}}]}]}
+2025-07-31T16:53:59.313Z - POST request: {"entry":[{"change":[{"value":{"message":[{"from":"5218711077415","text":{"body":"hola"}}]}}]}]}
+2025-07-31T16:54:27.474Z - POST request: {"entry":[{"change":[{"value":{"message":[{"from":"528711077415","text":{"body":"hola"}}]}}]}]}
+2025-07-31T17:18:12.130Z - POST request: {"entry":[{"change":[{"value":{"message":[{"from":"526181670762","text":{"body":"consultar"}}]}}]}]}
+2025-07-31T17:19:44.699Z - POST request: {"entry":[{"change":[{"value":{"message":[{"from":"526181670762","text":{"body":"cancelar"}}]}}]}]}
