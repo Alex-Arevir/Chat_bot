@@ -104,7 +104,7 @@ const agendar = {
     },
   },
 };
-
+/*
 const agendar2 = {
   messaging_producto: "whatsapp",
   to: phone,
@@ -116,8 +116,8 @@ const agendar2 = {
     },
   },
 };
-
-const agendar3 = {
+*/
+const agendar2 = {
   messaging_producto: "whatsapp",
   to: phone,
   type: "template",
@@ -133,7 +133,7 @@ module.exports = {
   saludos,
   agendar,
   agendar2,
-  agendar3,
+  //agendar3,
   cancelar,
   cancelar2,
   fin_cancelacion,
