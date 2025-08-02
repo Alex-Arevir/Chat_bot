@@ -12,7 +12,7 @@ const phone = "526181670762";
 
 // !---------- "es_MX" = Español Mexico || "en"= English----------------//
 
-const saludos = {
+const saludos = {//lista
   messaging_product: "whatsapp",
   to: phone,
   type: "template",
@@ -46,30 +46,33 @@ const saludos = {
   },
 };
 
-const cancelar = {
+const cancelar = {//lista
   messaging_product: "whatsapp",
   to: phone,
   type: "template",
   template: {
-    name: "cancelar_cita_name",
+    name: "confirmacion",
     language: {
       code: "es_MX",
     },
+    components: [
+      {
+        type: "button",
+        sub_type: "quick_reply",
+        index: "0",
+        parameters: [{ type: "payload", payload: "confirmar" }],
+      },
+      {
+        type: "button",
+        sub_type: "quick_reply",
+        index: "1",
+        parameters: [{ type: "payload", payload: "no" }],
+      }
+    ]
   },
 };
 
-const cancelar2 = {
-  messaging_product: "whatsapp",
-  to: phone,
-  type: "template",
-  template: {
-    name: "cancelar_cita_telefono",
-    language: {
-      code: "es_MX",
-    },
-  },
-};
-const fin_cancelacion = {
+const citaCancelada = {//lista
   messaging_product: "whatsapp",
   to: phone,
   type: "template",
@@ -81,19 +84,38 @@ const fin_cancelacion = {
   },
 };
 
-const consultar = {
-  messaging_producto: "whatsapp",
+
+const consultar = {//lista
+  messaging_product: "whatsapp",
   to: phone,
   type: "template",
-  remplate: {
+  template: {
     name: "consultar_cita",
     language: {
-      code: "",
+      code: "es_MX",
     },
+    components: [
+      {
+        type: "body",
+        parameters: [{ type: "text", text: "25/08/2025" }, { type: "text", text: "10:00 AM" }]
+      },
+      {
+        type: "button",
+        sub_type: "quick_reply",
+        index: "0",
+        parameters: [{ type: "payload", payload: "cancelar" }],
+      },
+      // {
+      //   type: "button",
+      //   sub_type: "quick_reply",
+      //   index: "1",
+      //   parameters: [{ type: "payload", payload: "" }],
+      // },
+    ]
   },
 };
 
-const agendar = {
+const agendar = {//lista
   messaging_product: "whatsapp",
   to: phone,
   type: "template",
@@ -104,38 +126,144 @@ const agendar = {
     },
   },
 };
-/*
+
+
 const agendar2 = {
-  messaging_producto: "whatsapp",
+  messaging_product: "whatsapp",
   to: phone,
   type: "template",
-  remplate: {
-    name: "agendar_cita_telefono",
-    language: {
-      code: "es_MX",
-    },
-  },
-};
-*/
-const agendar2 = {
-  messaging_producto: "whatsapp",
-  to: phone,
-  type: "template",
-  remplate: {
+  template: {
     name: "agendar_cita_correo",
     language: {
-      code: "es_MX",
+      code: "en",
     },
   },
 };
 
-module.exports = {
-  saludos,
-  agendar,
-  agendar2,
-  //agendar3,
-  cancelar,
-  cancelar2,
-  fin_cancelacion,
-  consultar,
+const finRegistro = {//lista
+  messaging_product: "whatsapp",
+  to: phone,
+  type: "template",
+  template: {
+    name: "fin_agendacion",
+    language: {
+      code: "es_MX",
+    },
+    components: [
+      {
+        type: "body",
+        parameters: [
+          { type: "text", text: "20/08/2025" },
+          { type: "text", text: "10:00 AM" }],
+      }
+    ]
+  },
 };
+
+
+
+const salir = {
+  messaging_product: "whatsapp",
+  to: phone,
+  type: "template",
+  template: {
+    name: "hello",
+    language: { code: "en" },
+    components: [
+      {
+        type: "body",
+        parameters: [{ type: "text", text: "Chostito" }],
+      },
+      {
+        type: "button",
+        sub_type: "quick_reply",
+        index: "0",
+        parameters: [{ type: "payload", payload: "btn_agendar_cita" }],
+      },
+      {
+        type: "button",
+        sub_type: "quick_reply",
+        index: "1",
+        parameters: [{ type: "payload", payload: "btn_cancelarcita" }],
+      },
+      {
+        type: "button",
+        sub_type: "quick_reply",
+        index: "2",
+        parameters: [{ type: "payload", payload: "btn_consultar_cita" }],
+      },
+    ],
+  },
+};
+
+const intentardeNuevo = {
+  messaging_product: "whatsapp",
+  to: phone,
+  type: "template",
+  template: {
+    name: "hello",
+    language: { code: "en" },
+    components: [
+      {
+        type: "body",
+        parameters: [{ type: "text", text: "Chostito" }],
+      },
+      {
+        type: "button",
+        sub_type: "quick_reply",
+        index: "0",
+        parameters: [{ type: "payload", payload: "btn_agendar_cita" }],
+      },
+      {
+        type: "button",
+        sub_type: "quick_reply",
+        index: "1",
+        parameters: [{ type: "payload", payload: "btn_cancelarcita" }],
+      },
+      {
+        type: "button",
+        sub_type: "quick_reply",
+        index: "2",
+        parameters: [{ type: "payload", payload: "btn_consultar_cita" }],
+      },
+    ],
+  },
+};
+
+function body(accion) {
+  switch (accion) {
+    case "saludos":
+      console.log(`body seleccionado: ${saludos} accion: ${accion}`);
+      return saludos;
+    case "salir":
+      console.log(`body seleccionado: ${salir} accion: ${accion}`);
+      return salir;
+    case "agendar":
+      console.log(`body seleccionado: ${agendar} accion: ${accion}`);
+      return agendar;
+    case "consultar":
+      console.log(`body seleccionado: ${consultar} accion: ${accion}`);
+      return consultar;
+    case "nombre":
+      console.log(`body seleccionado: ${agendar2} accion: ${accion}`);
+      return agendar2;
+    case "correo":
+      console.log(`body seleccionado: ${finRegistro} accion: ${accion}`);
+      return finRegistro;
+    case "cancelar":
+      console.log(`body seleccionado: ${cancelar} accion: ${accion}`);
+      return cancelar;
+    case "confirmacion":
+      console.log(`body seleccionado: ${citaCancelada} accion: ${accion}`);
+      return citaCancelada;
+    case "cancelarConfirmacion":
+      console.log(`body seleccionado: ${saludos} accion: ${accion}`);
+      return saludos;
+    default:
+      console.log(`body seleccionado: ${intentardeNuevo} accion: ${accion}`);
+      return intentardeNuevo;
+  }
+}
+module.exports = {
+  body
+}

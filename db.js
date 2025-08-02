@@ -1,19 +1,17 @@
-const mysql= rquire ('mysql2');
+function crearCita() {
+    //pendiente
+};
 
-const connection = mysql.createConnection({
-    host:'Localhost',
-    user:'root',
-    password:'',
-    database:'agenda_citas'
-});
+function obtenerEstadobytelefono(telefono) {
+    return "esperando_confirmacion";
+};
 
-connection.connect(err=>{
-    if(err){
-        console.error('error de conexion con BD:',err);
-        return;
-    }
-    console.log('Conexion Correcta');
+function guardarEstado(telefono, estado) {
+    //pendiente
+};
 
-});
-
-module.exports= connection;
+module.exports = {
+    crearCita,
+    obtenerEstadobytelefono,
+    guardarEstado
+}
