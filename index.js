@@ -1,4 +1,4 @@
-//declaracio  de constantes
+//declaracion  de constantes y cosas que se vana utilizar usando el node.js
 require('dotenv').config();
 const express = require("express");
 const token = require("./token");
@@ -8,15 +8,11 @@ const axios = require ("axios");
 const fs = require ("fs");
 const response = require("./response");
 const app = express();
-
-
-
 app.use(express.json());
 
 //configuracion de cornflais
-
 app.use(
-    cors({
+    cors({//cors es la libreria que permite el acceso a recursos de un servidor(cosas del node.js) 
         origin: "http:/localhost:3000",
         methods: "GET,POST,PUT,DELETE",
         allowedHeaders: ["COntent-Type","Autorization"],
@@ -24,12 +20,12 @@ app.use(
 );
 
 
-app.get("/webhook",token);
-app.post("/webhook", response);
+app.get("/webhook",token);//verifica el token de la api de whats
+app.post("/webhook", response);//lo mismo que el de arriba pero para recibir mensajes
 
 
 app.listen(3000,()=>{
-    console.log("Arre, el Servidor al 3000 viejon");
+    console.log("Arre, el Servidor al 3000 viejon");//Inicia el servidor
 });
 //obyener datos de api
 //const apiBaseUrl = "http://127.0.0.1:80/Practica_chat/ajax";

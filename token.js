@@ -1,3 +1,4 @@
+// Este archivo maneja la verificación del webhook de Meta
 const dotenv= require("dotenv");
 const fs = require ("fs");
 

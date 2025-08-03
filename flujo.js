@@ -3,10 +3,18 @@ const { body } = require('./bodyColex')
 const diccionario = require('./Diccionario')
 const { Mresp } = require('./Mresp')
 
-async function switchEstados(message, from) {
-    const estado = db.obtenerEstadobytelefono(from);
-    console.log("estado: ", estado);
-    switch (estado) {
+/**
+ * @param {string}switchEstados-funcion que maneja los estados del flujo de conversacion
+ * @param {string} message -Mensaje recibido del usuario
+ * @param {string} from -Lo que se recibe del numero de telefono del usuario
+ * @returns {Promise<void>} - Promesa que se resuelve cuando se completa el envio de mensaje
+ */
+
+// Funcion que maneja los estados del flujo de conversacion
+async function switchEstados(message, from) {//async es una funcion asincrona que permite esperar a que se completen las promesas dentro de ella)
+    const estado = db.obtenerEstadobytelefono(from);//se utiliza el db para obtener el estado del usuario (el telefono)
+    console.log("estado: ", estado);//imprime el estado actual del usuario
+    switch (estado) {//se utiliaza el switch para manejar los diferentes estados de la conversacion
         case null:
             await switchNull(message, from);
             break;
@@ -35,7 +43,7 @@ async function switchEstados(message, from) {
             break;
     }
 }
-
+//!-------------funciones que utiliza el switcb para manejar los estados de la converzacion--------------------
 async function switchNull(message, from){
     const accion = diccionario.accion(message);
     switch(accion) {
