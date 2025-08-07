@@ -3,7 +3,7 @@ function crearCita() {
 };
 
 function obtenerEstadobytelefono(telefono) {
-    return "esperando_confirmacion";
+    return "inicio";
 };
 
 function guardarEstado(telefono, estado) {

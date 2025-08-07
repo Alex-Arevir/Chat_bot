@@ -7,6 +7,10 @@ const authtoken = `Bearer ${process.env.TOKEN}`;
 
 const Mresp = async(from, body)=>{//Fucion que encapsula el envio de mensajjes
     try{
+        
+        from = from.startsWith("521") ? from.replace(/^521/, "52") : from;
+        console.log("numero : ",from);
+
         body.to= from;
         const response = await axios.post(
             apiBaseUrl,//apiBaseUrl es la url de la api de whats

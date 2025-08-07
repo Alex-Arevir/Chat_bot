@@ -12,7 +12,7 @@ app.use(express.json());
 
 //configuracion de cornflais
 app.use(
-    cors({//cors es la libreria que permite el acceso a recursos de un servidor(cosas del node.js) 
+    cors({//cors es la libreria que permite el acceso a recursos de un servidor(cosas del node.js)
         origin: "http:/localhost:3000",
         methods: "GET,POST,PUT,DELETE",
         allowedHeaders: ["COntent-Type","Autorization"],
