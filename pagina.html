@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hospital San Salud</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<h1>Lista de Citas</h1>
+<table id="tablaCitas">
+    <thead>
+        <tr>
+            <th>Teléfono</th>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Estatus</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script>
+async function cargarCitas() {
+    try {
+        const res = await fetch('/api/citas');
+        if (!res.ok) throw new Error('Error al cargar citas');
+        const citas = await res.json();
+        const tbody = document.querySelector('#tablaCitas tbody');
+        tbody.innerHTML = '';
+        citas.forEach(cita => {
+            tbody.innerHTML += `
+                <tr>
+                    <td>${cita.telefono}</td>
+                    <td>${cita.nombre || ''}</td>
+                    <td>${cita.correo || ''}</td>
+                    <td>${new Date(cita.fecha).toLocaleDateString()}</td>
+                    <td>${cita.hora}</td>
+                    <td>${cita.estatus}</td>
+                </tr>
+            `;
+        });
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+cargarCitas();//cargar citas 
+
+// Actualizar cada 30 segundos
+setInterval(cargarCitas, 30000);
+</script>
+
+<footer>
+    <p>&copy; 2025 Hospital San Salud de la Saludada, "Donde tu salud, Es nuestra Saludada" | Todos los derechos reservados</p>
+</footer>
+</body>
+</html>

@@ -6,7 +6,6 @@
  *@returns {Promise<void>}-Promesa que se resuelve cuando se completa el envio
  */
 
-const phone = "526181670762";
 
 //!----------------------------------------- Area de bodies--------------------------------------------------------//
 
@@ -14,7 +13,6 @@ const phone = "526181670762";
 
 const saludos = {//lista
   messaging_product: "whatsapp",
-  to: phone,
   type: "template",
   template: {
     name: "hello",
@@ -28,53 +26,85 @@ const saludos = {//lista
         type: "button",
         sub_type: "quick_reply",
         index: "0",
-        parameters: [{ type: "payload", payload: "btn_agendar_cita" }],
+        parameters: [{ type: "payload", payload: "Agendar Cita" }],
       },
       {
         type: "button",
         sub_type: "quick_reply",
         index: "1",
-        parameters: [{ type: "payload", payload: "btn_cancelarcita" }],
+        parameters: [{ type: "payload", payload: "Consultar Cita" }],
+      },
+    ],
+  },
+};
+const horarios = {
+  messaging_product: "whatsapp",
+  type: "template",
+  template: {
+    name: "escoger_horario",
+    language: {
+      code: "es_MX",
+    },
+    components: [
+      {
+        type: "body",
+        parameters: [
+          { type: "text", text: "03/13/2025 00:00" },
+          { type: "text", text: "02/08/2225 00:00" },
+          { type: "text", text: "01/08/5025 00:00" },
+        ],
+      },
+      {
+        type: "button",
+        sub_type: "quick_reply",
+        index: "0",
+        parameters: [{ type: "payload", payload: "Opcion 1" }],
+      },
+      {
+        type: "button",
+        sub_type: "quick_reply",
+        index: "1",
+        parameters: [{ type: "payload", payload: "Opcion 2" }],
       },
       {
         type: "button",
         sub_type: "quick_reply",
         index: "2",
-        parameters: [{ type: "payload", payload: "btn_consultar_cita" }],
+        parameters: [{ type: "payload", payload: "Opcion 3" }],
       },
     ],
   },
 };
 
-const cancelar = {//lista
+ const cancelar = {//lista
   messaging_product: "whatsapp",
-  to: phone,
   type: "template",
   template: {
-    name: "confirmacion",
+    name: "confirmacion",//aviso de si quieres cancelarla o no
     language: {
-      code: "es_MX",
+  code: "es_MX",
     },
     components: [
       {
         type: "button",
         sub_type: "quick_reply",
         index: "0",
-        parameters: [{ type: "payload", payload: "confirmar" }],
+        parameters: [{ type: "payload", payload: "Si" }],
       },
       {
         type: "button",
         sub_type: "quick_reply",
         index: "1",
-        parameters: [{ type: "payload", payload: "no" }],
-      }
+        parameters: [{ type: "payload", payload: "No" }],
+      },
     ]
   },
 };
 
+
+
 const citaCancelada = {//lista
   messaging_product: "whatsapp",
-  to: phone,
   type: "template",
   template: {
     name: "final_cancelacion",
@@ -84,10 +114,20 @@ const citaCancelada = {//lista
   },
 };
 
-
-const consultar = {//lista
+const sinCita = {//lista
   messaging_product: "whatsapp",
-  to: phone,
+  type: "template",
+  template: {
+    name: "sin_cita",
+    language: {
+      code: "es_MX",
+    },
+  },
+};
+
+
+const consultar = {//muestra cita y si quieres cancelarla o volver
+  messaging_product: "whatsapp",
   type: "template",
   template: {
     name: "consultar_cita",
@@ -97,27 +137,26 @@ const consultar = {//lista
     components: [
       {
         type: "body",
-        parameters: [{ type: "text", text: "25/08/2025" }, { type: "text", text: "10:00 AM" }]
+        parameters: [{ type: "text", text: "hora" }, { type: "text", text: "fecha" }]
       },
       {
         type: "button",
         sub_type: "quick_reply",
         index: "0",
-        parameters: [{ type: "payload", payload: "cancelar" }],
+        parameters: [{ type: "payload", payload: "¿Cancelar Cita?" }],
       },
-      // {
-      //   type: "button",
-      //   sub_type: "quick_reply",
-      //   index: "1",
-      //   parameters: [{ type: "payload", payload: "" }],
-      // },
+     {
+         type: "button",
+         sub_type: "quick_reply",
+         index: "1",
+         parameters: [{ type: "payload", payload: "Volver" }],
+       },
     ]
   },
 };
 
 const agendar = {//lista
   messaging_product: "whatsapp",
-  to: phone,
   type: "template",
   template: {
     name: "agendar_cita_name",
@@ -130,7 +169,6 @@ const agendar = {//lista
 
 const agendar2 = {
   messaging_product: "whatsapp",
-  to: phone,
   type: "template",
   template: {
     name: "agendar_cita_correo",
@@ -142,7 +180,6 @@ const agendar2 = {
 
 const finRegistro = {//lista
   messaging_product: "whatsapp",
-  to: phone,
   type: "template",
   template: {
     name: "fin_agendacion",
@@ -153,8 +190,8 @@ const finRegistro = {//lista
       {
         type: "body",
         parameters: [
-          { type: "text", text: "20/08/2025" },
-          { type: "text", text: "10:00 AM" }],
+          { type: "text", text: "hora" },
+          { type: "text", text: "fecha" }],
       }
     ]
   },
@@ -164,7 +201,6 @@ const finRegistro = {//lista
 
 const salir = {
   messaging_product: "whatsapp",
-  to: phone,
   type: "template",
   template: {
     name: "hello",
@@ -178,19 +214,13 @@ const salir = {
         type: "button",
         sub_type: "quick_reply",
         index: "0",
-        parameters: [{ type: "payload", payload: "btn_agendar_cita" }],
+        parameters: [{ type: "payload", payload: "Agendar Cita" }],
       },
       {
         type: "button",
         sub_type: "quick_reply",
         index: "1",
-        parameters: [{ type: "payload", payload: "btn_cancelarcita" }],
-      },
-      {
-        type: "button",
-        sub_type: "quick_reply",
-        index: "2",
-        parameters: [{ type: "payload", payload: "btn_consultar_cita" }],
+        parameters: [{ type: "payload", payload: "Consultar Cita" }],
       },
     ],
   },
@@ -198,33 +228,22 @@ const salir = {
 
 const intentardeNuevo = {
   messaging_product: "whatsapp",
-  to: phone,
   type: "template",
   template: {
-    name: "hello",
-    language: { code: "en" },
+    name: "denuevo",
+    language: { code: "es_MX" },
     components: [
-      {
-        type: "body",
-        parameters: [{ type: "text", text: "Chostito" }],
-      },
       {
         type: "button",
         sub_type: "quick_reply",
         index: "0",
-        parameters: [{ type: "payload", payload: "btn_agendar_cita" }],
+        parameters: [{ type: "payload", payload: "Intentar de nuevo" }],
       },
       {
         type: "button",
         sub_type: "quick_reply",
         index: "1",
-        parameters: [{ type: "payload", payload: "btn_cancelarcita" }],
-      },
-      {
-        type: "button",
-        sub_type: "quick_reply",
-        index: "2",
-        parameters: [{ type: "payload", payload: "btn_consultar_cita" }],
+        parameters: [{ type: "payload", payload: "Cancelar" }],
       },
     ],
   },
@@ -233,37 +252,50 @@ const intentardeNuevo = {
 function body(accion) {
   switch (accion) {
     case "saludos":
-      console.log(`body seleccionado: ${saludos} accion: ${accion}`);
+      console.log(`body seleccionado: ${JSON.stringify(saludos, null, 2)} accion: ${accion}`);//plantilla de inicio
       return saludos;
     case "salir":
-      console.log(`body seleccionado: ${salir} accion: ${accion}`);
+      console.log(`body seleccionado: ${JSON.stringify(salir, null, 2)} accion: ${accion}`);//plantilla de inicio pero para salir
       return salir;
     case "agendar":
-      console.log(`body seleccionado: ${agendar} accion: ${accion}`);
+      console.log(`body seleccionado: ${JSON.stringify(agendar, null, 2)} accion: ${accion}`);//plantilla para iniciar registro
       return agendar;
     case "consultar":
-      console.log(`body seleccionado: ${consultar} accion: ${accion}`);
+      console.log(`body seleccionado: ${JSON.stringify(consultar, null, 2)} accion: ${accion}`);//plantilla para ver la cita agendada
       return consultar;
     case "nombre":
-      console.log(`body seleccionado: ${agendar2} accion: ${accion}`);
-      return agendar2;
+      console.log(`body seleccionado: ${JSON.stringify(agendar, null, 2)} accion: ${accion}`);//manda la plantilla iniciar registro pero con otro estado
+      return agendar;
     case "correo":
-      console.log(`body seleccionado: ${finRegistro} accion: ${accion}`);
+      console.log(`body seleccionado: ${JSON.stringify(agendar2, null, 2)} accion: ${accion}`);//para registrar correo
+      return agendar2;
+    case "finRegistro":
+      console.log(`body seleccionado: ${JSON.stringify(finRegistro, null, 2)} accion: ${accion}`);//manda el final del registro
       return finRegistro;
+    case "horarios":
+      console.log(`body seleccionado: ${JSON.stringify(horarios, null, 2)} accion: ${accion}`);//manda para mirar los horarios disponibles
+      return horarios;
     case "cancelar":
-      console.log(`body seleccionado: ${cancelar} accion: ${accion}`);
+      console.log(`body seleccionado: ${JSON.stringify(cancelar, null, 2)} accion: ${accion}`);//manda para querer cancelar la cita o no
       return cancelar;
     case "confirmacion":
-      console.log(`body seleccionado: ${citaCancelada} accion: ${accion}`);
+      console.log(`body seleccionado: ${JSON.stringify(citaCancelada, null, 2)} accion: ${accion}`);//manda plantilla  de que se ha cancelado la cita
       return citaCancelada;
-    case "cancelarConfirmacion":
-      console.log(`body seleccionado: ${saludos} accion: ${accion}`);
+    case "cancelarconfirmacion":
+      console.log(`body seleccionado: ${JSON.stringify(saludos, null, 2)} accion: ${accion}`);//manda la plantilla de inicio
       return saludos;
+    case "volver":
+      console.log(`body seleccionado: ${JSON.stringify(saludos, null, 2)} accion: ${accion}`);
+      return saludos;
+    case "sinCita":
+      console.log(`body seleccionado: ${JSON.stringify(sinCita, null, 2)} accion: ${accion}`);//manda plantilla de no tienes cita
+      return sinCita;
     default:
-      console.log(`body seleccionado: ${intentardeNuevo} accion: ${accion}`);
+      console.log(`body seleccionado: ${JSON.stringify(intentardeNuevo, null, 2)} accion: ${accion}`);//manda una plantilla de volver a intentar o cancelar
       return intentardeNuevo;
   }
 }
+
 module.exports = {
   body
 }
