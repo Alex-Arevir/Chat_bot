@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hospital San Salud</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Lista de Citas</h1>
+    <h2>Bienvenido al sistema de gestión de citas del Hospital <b>Saludstino.</b></h2>
+    <h2>Aquí puedes ver todas las citas agendadas.</h2>
+
+    <table id="tablaCitas">
+      <thead>
+        <tr>
+          <th>Teléfono</th>
+          <th>Nombre</th>
+          <th>Correo</th>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th>Estatus</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <img src="https://external-preview.redd.it/ZtqkpDxf_kT_Fhojhb0nkzQgcaXODXypofxIiPit7tM.jpg?auto=webp&s=736a894a4cb5f313a03f8be9bbb2e00a46b82ae0" alt="Hospital Image">
+
+    <footer>
+      <p>&copy; 2025 Hospital San Salud de la Saludada, "Donde tu salud, Es nuestra Saludada" | Todos los derechos reservados</p>
+    </footer>
+  </div>
+
+<script>
+async function cargarCitas() {
+  try {
+    const res = await fetch('/api/citas');
+    if (!res.ok) throw new Error('Error al cargar citas');
+    const citas = await res.json();
+    const tbody = document.querySelector('#tablaCitas tbody');
+    tbody.innerHTML = '';
+    citas.forEach(cita => {
+      tbody.innerHTML += `
+        <tr>
+          <td>${cita.telefono}</td>
+          <td>${cita.nombre || ''}</td>
+          <td>${cita.correo || ''}</td>
+          <td>${new Date(cita.fecha).toLocaleDateString()}</td>
+          <td>${cita.hora}</td>
+          <td>${cita.estatus}</td>
+        </tr>
+      `;
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+cargarCitas(); // cargar citas al inicio
+
+// Actualizar cada 20 segundos
+setInterval(cargarCitas, 20000);
+</script>
+</body>
+</html>

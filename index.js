@@ -33,6 +33,13 @@ app.get('/api/citas', async (req, res) => {
     res.status(500).send('Error al obtener citas');
   }
 });
+app.use(express.static(path.join(__dirname, 'web')));
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'web', 'pagina.html'));
+});
+
+
 
 app.listen(3000,()=>{
     console.log("Arre, el Servidor al 3000 viejon");//Inicia el servidor
