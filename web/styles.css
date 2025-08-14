@@ -2,7 +2,7 @@
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    background-color: #f5f9fc; /* ajustado para que combine con tu bg */
+    background-color: #f5f9fc; 
     color: #333;
 }
 
@@ -12,7 +12,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 80vh; /* para que esté centrado verticalmente más o menos mitad */
+    min-height: 80vh; 
     padding: 20px;
     box-sizing: border-box;
 }
@@ -21,7 +21,7 @@ body {
 h1, h2 {
     margin: 10px 0;
     text-align: center;
-    color: #2a8db8; /* color azul de tu header */
+    color: #29cbfc; 
 }
 
 /* Tabla */
@@ -31,7 +31,7 @@ table {
     max-width: 900px;
     margin-bottom: 30px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    background-color: white; /* para destacar */
+    background-color: white; 
 }
 
 th, td {
@@ -41,7 +41,7 @@ th, td {
 }
 
 th {
-    background-color: #2a8db8; /* mismo azul de header */
+    background-color: #2a8db8; 
     color: white;
 }
 
@@ -59,7 +59,7 @@ img {
 
 /* Footer */
 footer {
-    background-color: #2a8db8;
+    background-color: #2998c7;
     color: white;
     text-align: center;
     padding: 15px;

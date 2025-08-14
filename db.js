@@ -5,11 +5,11 @@ const pool = mysql.createPool({
   user: 'root',
   password: '',
   database: 'agenda_cita',
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
+  waitForConnections: true,// Espera a que haya conexiones disponibles
+  connectionLimit: 5,//5 porque solo  se puede meta tener a 5 testers
+  queueLimit: 0 //sin limite de espera en cola
 });
-
+//!----------------------Api's de la Base de datos-------------------//
 // Obtener estado por teléfono
 async function obtenerEstadobytelefono(telefono) {
   const [rows] = await pool.query(
@@ -26,6 +26,7 @@ async function crearUsuario(telefono, estado) {
     [telefono, estado]
   );
 }
+//borra una cira de un usuario
 async function borrarCitaUsuario(telefono,fecha,hora){
   const[rows]=await pool.query(
     'delete c from citas c join usuarios u on c.ID_Usuario=u.id where u.telefono=? and c.fecha=? and c.hora=?',
@@ -113,7 +114,7 @@ async function obtenerCitasUsuario(telefono) {
   return rows;
 }
 
-
+//aqui obtiene todas las citas de la base de datos pero es para el uso del archivo pagina.html
 async function obtenerTodasLasCitas() {
   const [rows] = await pool.query(`
     SELECT u.telefono, u.nombre, u.correo, c.fecha, c.hora, c.estatus

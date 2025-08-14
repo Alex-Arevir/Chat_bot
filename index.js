@@ -35,7 +35,7 @@ app.get('/api/citas', async (req, res) => {
 });
 app.use(express.static(path.join(__dirname, 'web')));
 
-app.get('/', (req, res) => {
+app.get('/', (res) => {
   res.sendFile(path.join(__dirname, 'web', 'pagina.html'));
 });
 
