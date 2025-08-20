@@ -35,8 +35,19 @@ app.get('/api/citas', async (req, res) => {
 });
 app.use(express.static(path.join(__dirname, 'web')));
 
-app.get('/', (res) => {
-  res.sendFile(path.join(__dirname, 'web', 'pagina.html'));
+//todo:Es para pagina
+//  app.get('/', (res) => {  
+//   res.sendFile(path.join(__dirname, 'web', 'pagina.html'));
+// });
+
+app.get('/api/horarios', async (req, res) => {
+  try {
+    const horarios = await db.obtenerHorariosDisponibles();
+    res.json(horarios); // devuelve array de horarios
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error al obtener horarios');
+  }
 });
 
 

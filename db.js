@@ -1,138 +1,149 @@
-const mysql = require('mysql2/promise');
+const axios = require("axios");
+const dotenv = require("dotenv");
+dotenv.config(); // carga variables de .env
 
-const pool = mysql.createPool({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'agenda_cita',
-  waitForConnections: true,// Espera a que haya conexiones disponibles
-  connectionLimit: 5,//5 porque solo  se puede meta tener a 5 testers
-  queueLimit: 0 //sin limite de espera en cola
-});
-//!----------------------Api's de la Base de datos-------------------//
-// Obtener estado por teléfono
-async function obtenerEstadobytelefono(telefono) {
-  const [rows] = await pool.query(
-    "SELECT estado FROM usuarios WHERE telefono = ?",
-    [telefono]
-  );
-  return rows.length ? rows[0].estado : null;
-}
+const BASE_URL = process.env.BASE_URL || "http://localhost/apis"; // fallback si no está en .env
 
-// Crear usuario nuevo
-async function crearUsuario(telefono, estado) {
-  await pool.query(
-    "INSERT INTO usuarios (telefono, estado) VALUES (?, ?)",
-    [telefono, estado]
-  );
-}
-//borra una cira de un usuario
-async function borrarCitaUsuario(telefono,fecha,hora){
-  const[rows]=await pool.query(
-    'delete c from citas c join usuarios u on c.ID_Usuario=u.id where u.telefono=? and c.fecha=? and c.hora=?',
-    [telefono,fecha,hora]
-  );
-}
+// =====================
+// todo: Usuarios
+// =====================
 
-// Guardar estado
-async function guardarEstado(telefono, estado) {
-  await pool.query(
-    "UPDATE usuarios SET estado = ? WHERE telefono = ?",
-    [estado, telefono]
-  );
-}
-
-// Guardar nombre
-async function guardarNombre(telefono, nombre) {
-
-  if (typeof nombre !== 'string' || nombre.trim() === '') {
-    throw new Error('Nombre inválido');
-  }
+// Crear usuario
+async function crearUsuario(telefono, estado = "inicio") {
   try {
-    await pool.query(
-      "UPDATE usuarios SET nombre = ? WHERE telefono = ?",
-      [nombre.trim(), telefono]
-    );
-  } catch (error) {
-    console.error('Error guardarNombre:', error);
-    throw error;
+    const res = await axios.post(`${BASE_URL}/usuarios.php`, {
+      telefono,
+      estado,
+    });
+    return res.data;
+  } catch (err) {
+    console.error("Error creando usuario:", err.message);
   }
 }
 
-// Guardar correo
+// Obtener lista de usuarios
+async function obtenerUsuarios() {
+  try {
+    const res = await axios.get(`${BASE_URL}/usuarios.php?action=listar`);
+    return res.data;
+  } catch (err) {
+    console.error("Error obteniendo usuarios:", err.message);
+  }
+}
+
+// Obtener estado de un usuario por teléfono
+async function obtenerEstado(telefono) {
+  try {
+    const res = await axios.get(`${BASE_URL}/usuarios.php`, {
+      params: { telefono },
+    });
+    return res.data.estado || null; // fallback si PHP no devuelve estado
+  } catch (err) {
+    console.error("Error obteniendo estado:", err.message);
+    return null;
+  }
+}
+
+// Guardar estado de un usuario
+async function guardarEstado(telefono, estado) {
+  try {
+    const res = await axios.put(`${BASE_URL}/usuarios.php`, {
+      telefono,
+      estado,
+    });
+    return res.data;
+  } catch (err) {
+    console.error("Error guardando estado:", err.message);
+  }
+}
+
+// Guardar nombre de un usuario
+async function guardarNombre(telefono, nombre) {
+  try {
+    const res = await axios.put(`${BASE_URL}/usuarios.php`, {
+      telefono,
+      nombre,
+    });
+    return res.data;
+  } catch (err) {
+    console.error("Error guardando nombre:", err.message);
+  }
+}
+
+// Guardar correo de un usuario
 async function guardarCorreo(telefono, correo) {
-  await pool.query(
-    "UPDATE usuarios SET correo = ? WHERE telefono = ?",
-    [correo, telefono]
-  );
+  try {
+    const res = await axios.put(`${BASE_URL}/usuarios.php`, {
+      telefono,
+      correo,
+    });
+    return res.data;
+  } catch (err) {
+    console.error("Error guardando correo:", err.message);
+  }
 }
 
-// Obtener horarios disponibles
+// =====================
+// Citas
+// =====================
+
+// Crear cita
+async function crearCita(telefono, fecha, hora) {
+  try {
+    const res = await axios.post(`${BASE_URL}/citas.php`, {
+      action: "crear",
+      telefono,
+      fecha,
+      hora,
+    });
+    return res.data;
+  } catch (err) {
+    console.error("Error creando cita:", err.message);
+  }
+}
+
+// Obtener citas
+async function obtenerCitas() {
+  try {
+    const res = await axios.get(`${BASE_URL}/citas.php?action=listar`);
+    return res.data;
+  } catch (err) {
+    console.error("Error obteniendo citas:", err.message);
+  }
+}
+
+
 async function obtenerHorariosDisponibles() {
-  return ["12/08/2024 10:00", "15/05/2028 12:00", "15/08/2024 14:00", "48/58/2224 07:00", "74/47/5421 16:00"];
+  try {
+    const res = await axios.get(`${BASE_URL}/horarios.php?action=horarios`);
+    return res.data;
+  } catch (err) {
+    console.error("Error obteniendo horarios disponibles:", err.message);
+    return [];
+  }
 }
-
-// Guardar cita
-async function horariosRegistradosCitas(telefono, fecha, hora) {
-  const [user] = await pool.query(
-    "SELECT id FROM usuarios WHERE telefono = ?",
-    [telefono]
-  );
-  if (!user.length) throw new Error("Usuario no encontrado");
-
-  const idUsuario = user[0].id;
-
-  // Convertir fecha de 'dd/mm/yyyy' a 'yyyy-mm-dd'
-  const [dd, mm, yyyy] = fecha.split('/');
-  const fechaSQL = `${yyyy}-${mm.padStart(2, '0')}-${dd.padStart(2, '0')}`;
-
-  // Añadir segundos si la hora es solo hh:mm
-  const horaSQL = hora.length === 5 ? hora + ':00' : hora;
-
-  await pool.query(
-    "INSERT INTO citas (ID_Usuario, fecha, hora, estatus) VALUES (?, ?, ?, 'pendiente')",
-    [idUsuario, fechaSQL, horaSQL]
-  );
+async function borrarCitaUsuario(telefono, fecha, hora) {
+  try {
+    const res = await axios.delete(`${BASE_URL}/usuarios.php`, {
+      data: { telefono, fecha, hora } // DELETE necesita enviar los datos en `data`
+    });
+    return res.data;
+  } catch (err) {
+    console.error("Error borrando cita:", err.message);
+  }
 }
 
 
-
-// Obtener citas de un usuario
-async function obtenerCitasUsuario(telefono) {
-  const [user] = await pool.query(
-    "SELECT id FROM usuarios WHERE telefono = ?",
-    [telefono]
-  );
-  if (!user.length) return [];
-
-  const idUsuario = user[0].id;
-
-  const [rows] = await pool.query(
-    "SELECT fecha, hora, estatus FROM citas WHERE ID_Usuario = ?",
-    [idUsuario]
-  );
-  return rows;
-}
-
-//aqui obtiene todas las citas de la base de datos pero es para el uso del archivo pagina.html
-async function obtenerTodasLasCitas() {
-  const [rows] = await pool.query(`
-    SELECT u.telefono, u.nombre, u.correo, c.fecha, c.hora, c.estatus
-    FROM citas c
-    JOIN usuarios u ON c.ID_Usuario = u.id
-  `);
-  return rows;
-}
 
 module.exports = {
-  obtenerEstadobytelefono,
   crearUsuario,
+  obtenerUsuarios,
+  obtenerEstado,
   guardarEstado,
   guardarNombre,
   guardarCorreo,
+  crearCita,
+  obtenerCitas,
   obtenerHorariosDisponibles,
-  horariosRegistradosCitas,
-  obtenerCitasUsuario,
-  borrarCitaUsuario,
-  obtenerTodasLasCitas
+  borrarCitaUsuario
 };

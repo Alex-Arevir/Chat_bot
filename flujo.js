@@ -1,7 +1,7 @@
 const db = require("./db");
 const { body } = require("./bodyColex");
 const diccionario = require("./Diccionario");
-const { Mresp } = require("./Mresp");
+const { Mresp } =       require("./messageSender");
 const e = require("cors");
 
 /**
@@ -18,21 +18,8 @@ function validarCorreo(email) {
 }
 //funcion para detectar el formato de fecha y hora  del texto
 function plantillaCita(cita, nombrePlantilla) {
-  // Manejar fecha en Date o string ISO
-  let fechaISO;
-  if (typeof cita.fecha === "string") {
-    // fecha en string ISO o formato DateTime MySQL
-    fechaISO = cita.fecha.split("T")[0];
-  } else if (cita.fecha instanceof Date) {
-    fechaISO = cita.fecha.toISOString().split("T")[0];
-  } else {
-    fechaISO = "";
-  }
-
-  // Formatear fecha dd-mm-yyyy
-  const [yyyy, mm, dd] = fechaISO.split("-") || [];
-  const fechaFormateada = dd && mm && yyyy ? `${dd}-${mm}-${yyyy}` : fechaISO;
-  // inserta la fecha y hora en el body
+  const fechaFormateada = cita.fecha ? cita.fecha.split("-").reverse().join("-") : "";
+  const horaFormateada = cita.hora ? cita.hora.split(":").slice(0,2).join(":") : "";
   return {
     messaging_product: "whatsapp",
     type: "template",
@@ -44,7 +31,7 @@ function plantillaCita(cita, nombrePlantilla) {
           type: "body",
           parameters: [
             { type: "text", text: fechaFormateada },
-            { type: "text", text: cita.hora || "" },
+            { type: "text", text: horaFormateada },
           ],
         },
       ],
@@ -52,10 +39,11 @@ function plantillaCita(cita, nombrePlantilla) {
   };
 }
 
+
 // Funcion que maneja los estados del flujo de conversacion
 async function switchEstados(message, from) {
   //async es una funcion asincrona que permite esperar a que se completen las promesas dentro de ella)
-  const estado = await db.obtenerEstadobytelefono(from); //se utiliza el db para obtener el estado del usuario (el telefono)
+  const estado = await db.obtenerEstado(from); //se utiliza el db para obtener el estado del usuario (el telefono)
   console.log("estado: ", estado); //imprime el estado actual del usuario
   switch (
     estado //se utiliaza el switch para manejar los diferentes estados de la conversacion
@@ -88,7 +76,7 @@ async function switchEstados(message, from) {
       break;
 
     case "fin_de_registro":
-      await switchFinRegistro(from, "inicio");
+      await switchFinRegistro(from);
       break;
 
     case "esperando_salir_consulta":
@@ -132,7 +120,7 @@ async function switchEsperandoOpcion(message, from) {
 
     case "consultar":
       if (message === "Consultar Cita") {
-        const citas = await db.obtenerCitasUsuario(from, message);
+        const citas = await db.obtenerCitas(from, message);
 
         if (citas && citas.length > 0) {
           const ultima = citas[citas.length - 1];
@@ -248,7 +236,7 @@ async function switchConfirmarHorario(message, from) {
     if (!isNaN(index) && index >= 0 && index < horarios.length) {
       const horarioElegido = horarios[index];
       const [fecha, hora] = horarioElegido.split(" ");
-      await db.horariosRegistradosCitas(from, fecha, hora);
+      await db.crearCita(from, fecha, hora);
 
       await db.guardarEstado(from, "fin_de_registro");
       await switchFinRegistro(from);
@@ -260,20 +248,20 @@ async function switchConfirmarHorario(message, from) {
 
 async function switchFinRegistro(from) {
   try {
-    const fechas = await db.obtenerCitasUsuario(from);
+    const fechas = await db.obtenerCitas(from);
 
     if (fechas && fechas.length > 0) {
       const ultima = fechas[fechas.length - 1]; // última cita
       await Mresp(from, plantillaCita(ultima, "fin_agendacion"));
-      await Mresp(from, body("saludos"));
-      await db.guardarEstado(from, "esperando_opcion");
     } else {
+      // No hay citas, solo enviar mensaje de error o intento de nuevo
       await Mresp(from, body("intentardeNuevo"));
-      await Mresp(from, plantillaCita(ultima, "fin_agendacion"));
-      await new Promise((r) => setTimeout(r, 1500));
-      await Mresp(from, body("saludos"));
-      await db.guardarEstado(from, "esperando_opcion");
     }
+
+    // Mensaje de despedida y reset de estado (se hace en ambos casos)
+    await new Promise((r) => setTimeout(r, 1500));
+    await Mresp(from, body("saludos"));
+    await db.guardarEstado(from, "esperando_opcion");
   } catch (error) {
     console.error("Error en fin_de_registro: ", error);
   }
@@ -305,8 +293,7 @@ async function switchEsperandoConfirmacion(message, from) {
 
   switch (accion) {
     case "confirmacion":
-      const accion = diccionario.accion(message);
-      const citas = await db.obtenerCitasUsuario(from);
+      const citas = await db.obtenerCitas(from);
       if (citas && citas.length > 0) {
         const ultima = citas[citas.length - 1];
         await db.borrarCitaUsuario(from, ultima.fecha, ultima.hora);
